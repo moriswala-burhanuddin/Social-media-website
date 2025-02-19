@@ -4,6 +4,6 @@ User Authentication: Users can create accounts, log in, and send friend requests
 <br> 
 link: https://pistagramapp.pythonanywhere.com/
 
-<br>
-<img src="static/app/imgs/theme1.jpg" alt="Logo" width="300" style="margin-top:50px , height:300px">
+<br> <br> <br>
+<img src="static/app/imgs/theme1.jpg" alt="Logo"  style=" width:500px ; height:500px">
 
