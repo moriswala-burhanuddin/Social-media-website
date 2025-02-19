@@ -1,0 +1,519 @@
+   
+/* Google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --color-white: hsl(252, 30%, 100%);
+    --color-light: hsl(252, 30%, 95%);
+    --color-gray: hsl(252, 15%, 65%);
+    --color-primary: hsl(252, 75%, 60%);
+    --color-secondary: hsl(252, 100%, 90%);
+    --color-success: hsl(120, 95%, 65%);
+    --color-danger: hsl(0, 95%, 65%);
+    --color-dark: hsl(252, 30%, 17%);
+    --color-black: hsl(252, 30%, 10%);
+
+
+    --border-radius: 2rem;
+    --card-border-radius: 1rem;
+    --btn-padding: 0.6rem 1rem;
+    --search-padding: 0.6rem 1rem;
+    --card-padding: 1rem;
+
+    --sticky-top-left: 5.4rem;
+    --sticky-top-right: -18rem;
+
+
+
+}
+
+*,
+::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    outline: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    border: none;
+
+}
+
+body {
+    font-family: "popppins", sans-serif;
+
+    background: var(--color-black);
+    overflow-x: hidden;
+}
+/* Container */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+header {
+    background: rgb(19, 19, 19);
+    color: white;
+    padding: 1.2rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+header .logo h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    
+    letter-spacing: 1px;
+    font-family: 'Roboto', sans-serif;
+}
+
+header nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+header nav ul li {
+    position: relative;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 0.75rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+header nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+/* Button Styles */
+header nav ul li .btn-primary {
+    background-color: white;
+    color: #4CAF50;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header nav ul li .btn-primary:hover {
+    background-color: #45a049;
+    color: white;
+}
+
+/* Navbar Dropdown Menu (Optional) */
+header nav ul li ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    padding: 10px 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+header nav ul li:hover ul {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+header nav ul li ul li {
+    padding: 10px 20px;
+    text-align: left;
+}
+
+header nav ul li ul li a {
+    color: white;
+    padding: 10px 20px;
+}
+
+header nav ul li ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;  /* Vertically centers content */
+    justify-content: center;  /* Centers content horizontally */
+    height: 100vh;  /* Full viewport height */
+    padding: 0 20px;  /* Adds padding on sides */
+    background-color: black;  /* Black background for hero section */
+    color: white;  /* White text color */
+}
+
+.text-left, .text-right {
+    flex: 1 1 50%;  /* Each section takes up half of the width */
+    padding: 40px;  /* Adds generous padding inside the text box */
+    text-align: left;  /* Aligns text to the left */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  /* Vertically center content */
+}
+
+.text-left h1, .text-right h1 {
+    font-size: 3rem;  /* Larger heading */
+    font-weight: 700;  /* Bold font for emphasis */
+    margin-bottom: 20px;  /* Adds space below heading */
+    color: #fff;  /* White text for heading */
+    line-height: 1.2;  /* Line height for better spacing */
+    text-transform: uppercase;  /* Makes the heading more striking */
+    letter-spacing: 1px;  /* Adds some space between letters */
+}
+
+.text-left p, .text-right p {
+    font-size: 1.3rem;  /* Slightly larger text */
+    margin-bottom: 30px;  /* Adds space between text and button */
+    color: #ddd;  /* Softer white color for the paragraph */
+    line-height: 1.8;  /* Makes the text easier to read */
+    max-width: 500px;  /* Constrains paragraph width for better readability */
+}
+
+.video-background {
+    flex: 1 1 50%;  /* Makes the video section take up the other half */
+    max-height: 500px;  /* Limits the height */
+    overflow: hidden;  /* Hides any overflow from the video */
+    position: relative;
+}
+
+.video-background video {
+    width: 100%;
+    height: 100%;  /* Ensure the video covers the entire div */
+    object-fit: cover;  /* Maintain aspect ratio and cover the container */
+}
+
+.btn-primary {
+    padding: 12px 25px;  /* Button padding */
+    font-size: 1.1rem;  /* Font size of button */
+    color: white;  /* White text */
+    background-color: var(--color-success);  /* Primary blue background */
+    border: none;  /* No border */
+    border-radius: 5px;  /* Rounded corners */
+    cursor: pointer;  /* Pointer cursor on hover */
+    text-decoration: none;  /* No underline */
+    text-align: center;  /* Center the text inside the button */
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;  /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;  /* Stack video and text vertically */
+    }
+
+    .video-background,
+    .text-left, .text-right {
+        flex: 1 1 100%;  /* Make both sections full-width */
+        max-height: 400px;  /* Slightly smaller video on mobile */
+    }
+
+    .text-left h1, .text-right h1 {
+        font-size: 2.5rem;  /* Smaller heading on mobile */
+    }
+
+    .text-left p, .text-right p {
+        font-size: 1rem;  /* Smaller text on mobile */
+    }
+
+    .btn-primary {
+        font-size: 1rem;  /* Adjust button size on mobile */
+        padding: 10px 20px;  /* Smaller button padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .text-left h1, .text-right h1 {
+        font-size: 2rem;  /* Even smaller heading on very small screens */
+    }
+
+    .text-left p, .text-right p {
+        font-size: 0.9rem;  /* Smaller paragraph text */
+    }
+
+    .btn-primary {
+        font-size: 0.9rem;  /* Even smaller button text */
+        padding: 8px 15px;  /* Even smaller button padding */
+    }
+}
+
+/* Feature Section Styling */
+.feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;  /* Black background */
+    color: white;  /* White text color */
+    padding: 50px 20px;
+    text-align: center;
+}
+
+/* Section Header */
+.feature h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffea00;  /* Yellow color for the title */
+}
+
+/* Description Text */
+.feature p {
+    font-size: 1.2rem;
+    color: #f7f7f7;  /* Softer white for description */
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+}
+
+/* Feature List - Grid Layout */
+.feature-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* Individual Feature Item */
+.feature-item {
+    background-color: #222;  /* Darker background for feature items */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-10px);  /* Slight lift on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+.feature-item h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffea00;  /* Yellow color for headings */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.feature-item p {
+    font-size: 1.1rem;
+    color: #ddd;
+    line-height: 1.6;
+}
+
+/* About Us Section */
+.about-us {
+    background-color: #333;  /* Slightly darker background for About Us */
+    padding: 40px 20px;
+    margin-top: 60px;
+    max-width: 900px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.about-us h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffea00;  /* Yellow color for About Us title */
+    margin-bottom: 20px;
+}
+
+.about-us p {
+    font-size: 1.2rem;
+    color: #f7f7f7;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .feature-list {
+        grid-template-columns: 1fr;  /* Stack the feature items vertically */
+    }
+
+    .feature-item {
+        margin-bottom: 20px;  /* Adds space between feature items */
+    }
+
+    .feature h2 {
+        font-size: 2.2rem;  /* Slightly smaller header */
+    }
+
+    .feature-item h3 {
+        font-size: 1.4rem;  /* Slightly smaller headings */
+    }
+
+    .feature-item p {
+        font-size: 1rem;  /* Smaller text */
+    }
+
+    .about-us h2 {
+        font-size: 2rem;  /* Smaller About Us header */
+    }
+
+    .about-us p {
+        font-size: 1rem;  /* Smaller paragraph */
+    }
+}
+
+@media (max-width: 480px) {
+    .feature h2 {
+        font-size: 1.8rem;  /* Smaller header on small screens */
+    }
+
+    .feature-item h3 {
+        font-size: 1.2rem;  /* Even smaller heading */
+    }
+
+    .feature-item p {
+        font-size: 0.9rem;  /* Smaller paragraph text */
+    }
+
+    .about-us h2 {
+        font-size: 1.8rem;  /* Smaller About Us header */
+    }
+
+    .about-us p {
+        font-size: 0.9rem;  /* Even smaller paragraph text */
+    }
+}
+
+
+.video-explore{
+    width: 100%;
+}
+.video-explore video{
+    width: 100%;
+}
+/* Footer Section Styling */
+.footer {
+    background-color: black;  /* Black background for the footer */
+    color: white;  /* White text color */
+    padding: 30px 20px;
+    position: relative;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Footer Logo */
+.footer-logo h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f4f4f4;  /* Yellow color for logo */
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Footer Links */
+.footer-links ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links ul li {
+    font-size: 1.1rem;
+}
+
+.footer-links ul li a {
+    color: #ddd;  /* Light gray color for links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+    color: #ffea00;  /* Change to yellow when hovered */
+}
+
+/* Footer Bottom Text */
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-bottom p {
+    font-size: 1rem;
+    color: #ddd;
+    margin: 5px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-logo h1 {
+        font-size: 1.8rem;  /* Adjust logo size for mobile */
+    }
+
+    .footer-links ul {
+        flex-direction: column;  /* Stack links vertically on smaller screens */
+        gap: 10px;
+    }
+
+    .footer-links ul li {
+        font-size: 1rem;
+    }
+
+    .footer-bottom p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-logo h1 {
+        font-size: 1.5rem;  /* Even smaller logo for small screens */
+    }
+
+    .footer-links ul li {
+        font-size: 0.9rem;
+    }
+
+    .footer-bottom p {
+        font-size: 0.8rem;
+    }
+}
