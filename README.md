@@ -6,4 +6,8 @@ link: https://pistagramapp.pythonanywhere.com/
 
 <br> <br> <br>
 <img src="static/app/imgs/theme1.jpg" alt="Logo"  style=" width:500px ; height:400px">
+<img src="static/app/imgs/pic2.png" alt="Logo"  style=" width:500px ; height:400px">
+
+<img src="static/app/imgs/pic3.png" alt="Logo"  style=" width:500px ; height:400px">
+<img src="static/app/imgs/pic4.png" alt="Logo"  style=" width:500px ; height:400px">
 
