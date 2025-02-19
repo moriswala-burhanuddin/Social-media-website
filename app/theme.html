@@ -1,0 +1,448 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Customization</title>
+    <link rel="stylesheet" href="{% static 'app/css/stylefortheme.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+
+<body>
+    <!-- Theme Customization Modal -->
+    <div class="customize-theme">
+        <div class="card">
+            <h2>Customize Your View</h2>
+            <p class="text-muted">Manage Your Font Size, Color, and Background</p>
+
+            <!-- Font Size -->
+            <div class="font-size">
+                <h4>Font Size</h4>
+                <div>
+                    <h6>Aa</h6>
+                    <div class="choose-size">
+                        <span class="font-size-1"></span>
+                        <span class="font-size-2 active"></span>
+                        <span class="font-size-3"></span>
+                        <span class="font-size-4"></span>
+                        <span class="font-size-5"></span>
+                    </div>
+                    <h3>Aa</h3>
+                </div>
+            </div>
+
+            <!-- Color Selection -->
+            <div class="color">
+                <h4>Color</h4>
+                <div class="choose-color">
+                    <span class="color-1 active"></span>
+                    <span class="color-2"></span>
+                    <span class="color-3"></span>
+                    <span class="color-4"></span>
+                    <span class="color-5"></span>
+                </div>
+            </div>
+
+            <!-- Background Selection -->
+            <div class="background">
+                <h4>Background</h4>
+                <div class="choose-bg">
+                    <div class="bg-1 active">
+                        <span></span>
+                        <h5>Light</h5>
+                    </div>
+                    <div class="bg-2">
+                        <span></span>
+                        <h5>Dim</h5>
+                    </div>
+                    <div class="bg-3">
+                        <span></span>
+                        <h5>Lights Out</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            
+            
+        document.addEventListener('DOMContentLoaded', function () {
+                const sidebar = document.querySelector('.sidebar');
+                const toggleButton = document.querySelector('.sidebar-toggle');
+                const body = document.querySelector('body'); // Add this line
+        
+                // Function to handle toggle
+                function handleToggle() {
+                    if (window.innerWidth < 1200) {
+                        sidebar.classList.toggle('active');
+                    }
+                }
+        
+                // Function to close sidebar if clicked outside
+                function handleClickOutside(event) {
+                    if (window.innerWidth < 1200) {
+                        if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+                            sidebar.classList.remove('active');
+                        }
+                    }
+                }
+        
+                // Initial setup
+                if (window.innerWidth < 1200) {
+                    toggleButton.style.display = 'block'; // Ensure toggle button is visible
+                    toggleButton.addEventListener('click', handleToggle);
+                    document.addEventListener('click', handleClickOutside); // Add event listener for clicks
+                }
+        
+                // Handle window resize events to adjust visibility
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth < 1200) {
+                        toggleButton.style.display = 'block';
+                        document.addEventListener('click', handleClickOutside); // Ensure event listener is added on resize
+                    } else {
+                        toggleButton.style.display = 'none';
+                        sidebar.classList.remove('active'); // Hide sidebar if larger than 1200px
+                        document.removeEventListener('click', handleClickOutside); // Remove event listener if not needed
+                    }
+                });
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+document.querySelectorAll('.like-icon').forEach(icon => {
+    const postId = icon.dataset.postId;
+
+    // Check initial liked state on page load
+    const isLiked = icon.classList.contains('liked'); // initial like state
+
+    // Add event listener for clicking like/unlike
+    icon.addEventListener('click', () => {
+        toggleLike(postId, icon, csrfToken, isLiked); // Pass initial state to toggle function
+    });
+});
+});
+
+// Function to toggle like status
+function toggleLike(postId, icon, csrfToken, isLiked) {
+const url = `/like/${postId}/`;
+
+// Send the like/unlike request based on the initial state
+const action = isLiked ? 'unlike' : 'like'; // Define action based on the current state
+
+fetch(url, {
+    method: 'POST',
+    headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json',  // Make sure you're sending JSON content
+    },
+    body: JSON.stringify({ action: action }) // Send action as part of request
+})
+.then(response => response.json())
+.then(data => {
+    if (data.liked) {
+        icon.classList.add('liked');
+        icon.classList.remove('unliked');
+    } else {
+        icon.classList.remove('liked');
+        icon.classList.add('unliked');
+    }
+
+    // Update like count
+    const likeCountElement = document.getElementById(`like-count-${postId}`);
+    if (likeCountElement) {
+        likeCountElement.innerText = `${data.likes_count} Likes`;
+    }
+
+    // Update initial state to reflect the current like status
+    isLiked = data.liked; // Update the local state of the like button
+})
+.catch(error => {
+    console.error('Error toggling like:', error);
+});
+}
+
+                document.querySelectorAll('.comment-form').forEach(form => {
+                        form.addEventListener('submit', function(event) {
+                            event.preventDefault();  // Prevent the default form submission
+                            const postId = this.dataset.postId;
+                            const formData = new FormData(this);
+                
+                            fetch(`/comment/${postId}/`, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Insert the new comment into the comment section
+                                const commentSection = this.closest('.comments');
+                                commentSection.insertAdjacentHTML('beforeend', data.comment_html);
+                                this.reset();  // Reset the form
+                            });
+                        });
+                    });
+                
+                
+    document.addEventListener('DOMContentLoaded', () => {
+    // Get all video elements
+    const videos = document.querySelectorAll('video');
+
+    // Create an IntersectionObserver to track visibility of videos
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target;
+
+            // Check if the video is in view
+            if (entry.isIntersecting) {
+                video.play(); // Autoplay the video when it's in view
+                video.unmuted = true; // Ensure video starts muted
+            } else {
+                video.pause(); // Pause the video when it's out of view
+            }
+        });
+    }, {
+        threshold: 0.5 // Trigger when 50% of the video is visible
+    });
+
+    // Observe each video
+    videos.forEach(video => observer.observe(video));
+
+    // Get all mute buttons
+    const muteButtons = document.querySelectorAll('button[data-post-id]');
+
+    // Add event listeners to mute buttons
+    muteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const postId = button.getAttribute('data-post-id');
+            toggleMute(postId);
+        });
+    });
+});
+
+// Toggle mute functionality
+function toggleMute(postId) {
+    // Get the video and button elements
+    const video = document.getElementById(`post-video-${postId}`);
+    const muteButton = document.getElementById(`mute-btn-${postId}`);
+
+    // Check if the video exists
+    if (video) {
+        const icon = muteButton.querySelector('i'); // Get the icon element inside the button
+
+        // Toggle the muted property
+        if (video.muted) {
+            video.muted = false; // Unmute video
+            icon.className = 'bx bx-volume-full'; // Update icon to 'volume full'
+        } else {
+            video.muted = true; // Mute video
+            icon.className = 'bx bxs-volume-mute'; // Update icon to 'volume mute'
+        }
+    } else {
+        console.error("Video not found for post ID:", postId);
+    }
+}
+
+                function toggleComments(button) {
+                const postId = button.getAttribute('data-post-id'); // Fetch post.id from the button's data attribute
+                const commentList = document.getElementById(`comments-${postId}`);
+                
+                // Toggle visibility of the comments list
+                if (commentList.style.display === "none" || commentList.style.display === "") {
+                    commentList.style.display = "block";
+                    button.textContent = "Hide Comments";
+                } else {
+                    commentList.style.display = "none";
+                    button.textContent = "Show Comments";
+                }
+            }
+        
+            // Apply stored theme settings when the page is loaded
+        const applyStoredTheme = () => {
+            const root = document.documentElement; // Root element to apply CSS variables
+        
+            // Apply stored font size
+            const fontSize = localStorage.getItem('font-size');
+            if (fontSize) {
+                document.querySelector('html').style.fontSize = fontSize;
+            }
+        
+            // Apply stored primary color
+            const primaryColor = localStorage.getItem('primary-color');
+            if (primaryColor) {
+                root.style.setProperty('--color-primary', primaryColor);
+            }
+        
+            // Apply stored background colors
+            const backgroundColors = JSON.parse(localStorage.getItem('background-colors'));
+            if (backgroundColors) {
+                Object.keys(backgroundColors).forEach(key => {
+                    root.style.setProperty(key, backgroundColors[key]);
+                });
+            }
+        };
+        
+        // Call the function to apply stored theme settings
+        applyStoredTheme();
+        
+        // Theme selection logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const theme = document.querySelector('#theme');
+            const themeModal = document.querySelector('.customize-theme');
+            const fontSizes = document.querySelectorAll('.choose-size span'); // Font size elements
+            const colorSpans = document.querySelectorAll('.choose-color span'); // Color elements
+            const backgroundDivs = document.querySelectorAll('.choose-bg > div'); // Background elements
+            const root = document.documentElement; // Root element to apply CSS variables
+        
+            // Open theme modal function
+            const openThemeModal = () => {
+                themeModal.style.display = 'grid';
+            };
+        
+            // Close theme modal function
+            const closeThemeModal = (e) => {
+                if (e.target.classList.contains('customize-theme')) {
+                    themeModal.style.display = 'none';
+                }
+            };
+        
+            // Event listeners for opening and closing the modal
+            themeModal.addEventListener('click', closeThemeModal);
+            theme.addEventListener('click', openThemeModal);
+        
+            // Handle font size change
+            const removesizeselector = () => {
+                fontSizes.forEach(size => {
+                    size.classList.remove('active');
+                });
+            };
+        
+            fontSizes.forEach(size => {
+                size.addEventListener('click', () => {
+                    let fontSize;
+                    removesizeselector();
+                    size.classList.toggle('active');
+        
+                    // Set font size based on the clicked element
+                    if (size.classList.contains('font-size-1')) {
+                        fontSize = "10px";
+                        root.style.setProperty('--sticky-top-left', '5.4rem');
+                        root.style.setProperty('--sticky-top-right', '5.4rem');
+                    } else if (size.classList.contains('font-size-2')) {
+                        fontSize = "13px";
+                        root.style.setProperty('--sticky-top-left', '5.4rem');
+                        root.style.setProperty('--sticky-top-right', '-7rem');
+                    } else if (size.classList.contains('font-size-3')) {
+                        fontSize = "16px";
+                        root.style.setProperty('--sticky-top-left', '-2rem');
+                        root.style.setProperty('--sticky-top-right', '-17rem');
+                    } else if (size.classList.contains('font-size-4')) {
+                        fontSize = "19px";
+                        root.style.setProperty('--sticky-top-left', '-5rem');
+                        root.style.setProperty('--sticky-top-right', '-25rem');
+                    } else if (size.classList.contains('font-size-5')) {
+                        fontSize = "22px";
+                        root.style.setProperty('--sticky-top-left', '-10rem');
+                        root.style.setProperty('--sticky-top-right', '-33rem');
+                    }
+        
+                    // Apply font size to root HTML and store in localStorage
+                    document.querySelector('html').style.fontSize = fontSize;
+                    localStorage.setItem('font-size', fontSize);
+                });
+            });
+        
+            // Function to remove 'active' class from all elements in a NodeList
+            function removeActiveClass(elements) {
+                elements.forEach(element => element.classList.remove('active'));
+            }
+        
+            // Function to set the primary color and store it in localStorage
+            function setPrimaryColor(color) {
+                root.style.setProperty('--color-primary', color);
+                localStorage.setItem('primary-color', color);
+            }
+        
+            // Function to set background colors and store them in localStorage
+            function setBackgroundColors(colors) {
+                Object.keys(colors).forEach(key => {
+                    root.style.setProperty(key, colors[key]);
+                });
+                localStorage.setItem('background-colors', JSON.stringify(colors));
+            }
+        
+            // Add click event listeners for color spans
+            colorSpans.forEach((span, index) => {
+                span.addEventListener('click', () => {
+                    removeActiveClass(colorSpans);
+                    span.classList.add('active');
+        
+                    // Set primary color based on the clicked color span
+                    switch (index) {
+                        case 0:
+                            setPrimaryColor('hsl(252, 75%, 60%)');
+                            break;
+                        case 1:
+                            setPrimaryColor('hsl(52, 75%, 60%)');
+                            break;
+                        case 2:
+                            setPrimaryColor('hsl(352, 75%, 60%)');
+                            break;
+                        case 3:
+                            setPrimaryColor('hsl(152, 75%, 60%)');
+                            break;
+                        case 4:
+                            setPrimaryColor('hsl(202, 75%, 60%)');
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            });
+        
+            // Add click event listeners for background divs
+            backgroundDivs.forEach((div, index) => {
+                div.addEventListener('click', () => {
+                    removeActiveClass(backgroundDivs);
+                    div.classList.add('active');
+        
+                    // Set background colors based on the clicked background div
+                    switch (index) {
+                        case 0:
+                            setBackgroundColors({
+                                '--color-white': 'hsl(252, 30%, 100%)',
+                                '--color-light': 'hsl(252, 30%, 95%)',
+                                '--color-dark': 'hsl(252, 30%, 17%)',
+                                '--color-black': 'hsl(252, 30%, 10%)'
+                            });
+                            break;
+                        case 1:
+                            setBackgroundColors({
+                                '--color-white': 'hsl(252, 30%, 17%)',
+                                '--color-light': 'hsl(252, 30%, 10%)',
+                                '--color-dark': 'hsl(252, 30%, 95%)',
+                                '--color-black': 'hsl(252, 30%, 100%)'
+                            });
+                            break;
+                        case 2:
+                            setBackgroundColors({
+                                '--color-white': 'hsl(252, 30%, 10%)',
+                                '--color-light': 'hsl(252, 30%, 5%)',
+                                '--color-dark': 'hsl(252, 30%, 90%)',
+                                '--color-black': 'hsl(252, 30%, 100%)'
+                            });
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            });
+        });
+        </script>
+</body>
+
+</html>

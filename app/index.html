@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load custom_filters %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pistagram</title>
+
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+        <!-- or -->
+        <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    </head>
+
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <!-- Boxicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+
+
+
+<body>
+    <nav>
+        <div class="container">
+            <div class="sidebar-toggle">
+                <a aria-label="Toggle Sidebar">
+                    <i class='bx bx-menu'></i>
+                </a>
+
+            </div>
+            <div class="logo1" style="margin-left: 100px;">
+                <h2 class="logo">Pistagram</h2>
+            </div>
+
+            <div class="search-bar">
+                <form method="GET" action="{% url 'search_profiles' %}">
+                    <i class='bx bx-search'></i>
+                    <input type="search" name="query" placeholder="Search for users" required autocomplete="off">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="n">
+                <!-- Notifications Icon for Small Screen -->
+                <a href="#" class="heart" id="SmallNotifications">
+                    <i class='bx bxs-heart hearta'></i>
+                    <small class="notification-count">
+                        {{ notifications.count|default:0 }}
+                    </small>
+                    </i>
+                </a>
+            </div>
+
+
+
+
+
+            <!-- Small Screen Notifications Popup -->
+            <div class="notifications-popup-small">
+                {% for notification in notifications %}
+                <div class="notification-item">
+                    <div class="profile-photo">
+                        <img src="{% if notification.actor.profile.profile_pic %}{{ notification.actor.profile.profile_pic.url }}{% else %}{% static 'app/imgs/default.jpg' %}{% endif %}"
+                            alt="">
+                    </div>
+                    <div class="notification-body">
+                        <strong>{{ notification.message }}</strong>
+                        <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No notifications yet.</p>
+                {% endfor %}
+            </div>
+
+            <div class="create">
+                {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Logout</button>
+
+                </form>
+                {% else %}
+                <a href="{% url 'signup' %}" class="btn btn-primary">Login</a>
+                {% endif %}
+            </div>
+            <div class="profile-photo">
+                <a href="{% url 'profile' %}">
+                    {% if profile.profile_pic %}
+                    <img src="{{ profile.profile_pic.url }}" alt="Profile Picture">
+                    {% else %}
+                    <div class="profile-placeholder">No Profile Picture</div>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+
+
+
+
+
+
+
+    <!--------- Main ------- -->
+    <main>
+        <div class="container">
+             <!-- left -->
+            <div class="left">
+
+
+                <!-- ******************************* -->
+                <div class="sidebar-2">
+                    <a href="{% url 'home' %}" class="menu-item-2 active">
+                        <span><i class='bx bx-home'></i></span>
+                        <h3>Home</h3>
+                    </a>
+                    <a href="{% url 'all_posts' %}" class="menu-item-2">
+                        <span><i class='bx bx-file-blank'></i></span>
+                        <h3>Explore</h3>
+                    </a>
+                    <a href="{% url 'notifications' %}" class="menu-item-2" id="Notifications">
+                        <span>
+                            <i class='bx bx-bell'>
+                                <small class="Notification-count-2">
+                                    {{ notifications.count|default:0 }}
+                                </small>
+                            </i>
+                        </span>
+                        <h3>Notifications</h3>
+                        <!-- Notifications Popup (Optional, can still show when clicked) -->
+                        <div class="notifications-popup">
+                            {% for notification in notifications %}
+                            <div>
+                                <div class="profile-photo">
+                                    <img src="{% if notification.actor.profile.profile_pic %}{{ notification.actor.profile.profile_pic.url }}{% else %}{% static 'app/imgs/default.jpg' %}{% endif %}"
+                                        alt="">
+                                </div>
+                                <div class="notification-body">
+                                    <strong>{{ notification.message }}</strong>
+                                    <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p>No notifications yet.</p>
+                            {% endfor %}
+                        </div>
+                    </a>
+
+
+                    <a href="{% url 'messages' %}" class="menu-item-2" id="messages-notifications">
+                        <span>
+                            <i class='bx bx-comment-dots'>
+                                <small class="Notification-count-2">6</small>
+                            </i>
+                        </span>
+                        <h3>Messages</h3>
+                    </a>
+
+                    <a href="#" class="menu-item-2 ">
+                        <span><i class='bx bx-bookmark'></i>
+
+                        </span>
+                        <h3>Bookmarks</h3>
+                    </a>
+                    <a href="#" class="menu-item-2 ">
+                        <span><i class='bx bx-coin-stack'></i>
+
+                        </span>
+                        <h3>Analytics</h3>
+                    </a>
+                    <a href="#" class="menu-item-2 " id="theme">
+                        <span><i class='bx bx-check-circle'></i>
+
+                        </span>
+                        <h3>Theme</h3>
+                    </a>
+                    <a href="{% url 'settings' %}" class="menu-item-2">
+                        <span><i class='bx bxs-cog'></i></span>
+                        <h3>Settings</h3>
+                    </a>
+
+
+
+                </div>
+                <!-- End of the sidebar -->
+
+
+                <!-- ********************************* -->
+                <!-- sidebar for small screen-->
+                <div class="sidebar">
+                    <div class="search-bar-small">
+                        <form method="GET" action="{% url 'search_profiles' %}">
+                            <i class='bx bx-search'></i>
+                            <input type="search" name="query" placeholder="Search for users" required
+                                autocomplete="off">
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                    <a href="{% url 'home' %}" class="menu-item active">
+                        <span><i class='bx bx-home'></i></span>
+                        <h3>Home</h3>
+                    </a>
+                    <a href="{% url 'all_posts' %}" class="menu-item">
+                        <span><i class='bx bx-file-blank'></i></span>
+                        <h3>Explore</h3>
+                    </a>
+
+                    <a href="{% url 'messages' %}" class="menu-item" id="messages-notifications">
+                        <span>
+                            <i class='bx bx-comment-dots'>
+
+                            </i>
+                        </span>
+                        <h3>Messages</h3>
+                    </a>
+                    <a href="#" class="menu-item ">
+                        <span><i class='bx bx-bookmark'></i>
+
+                        </span>
+                        <h3>Bookmarks</h3>
+                    </a>
+                    <a href="#" class="menu-item ">
+                        <span><i class='bx bx-coin-stack'></i>
+
+                        </span>
+                        <h3>Analytics</h3>
+                    </a>
+                    <a href="#" class="menu-item" id="theme2">
+                        <span><i class='bx bx-check-circle'></i>
+
+                        </span>
+                        <h3>Theme</h3>
+                    </a>
+                    <a href="{% url 'settings' %}" class="menu-item">
+                        <span><i class='bx bxs-cog'></i></span>
+                        <h3>Settings</h3>
+                    </a>
+
+
+                </div>
+
+
+            </div>
+            <!-- middle -->
+            <div class="middle">
+                <!-- stories -->
+                <!-- <div class="stories">
+                    <div class="story">
+                        
+                        <div>
+                            <a href="{% url 'profile' %}">
+                                {% if profile.profile_pic %}
+                                <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                            {% else %}
+                                <div class="profile-placeholder">No Profile Picture</div>
+                            {% endif %}
+                            </a>
+                        </div>
+                        
+                        <p class="name">Your Story</p>
+                    </div>
+                    <div class="story">
+                        <div>
+                            <div class="profile-photo">
+                                <img src="{% static 'app/imgs/profile-9.jpg' %}" alt="">
+                            </div>
+                            <img src="{% static 'app/imgs/story-2.jpg '%}" alt="">
+                        </div>
+                        <p class="name">Chakli</p>
+                    </div>
+                    <div class="story">
+                       <div>
+                        <div class="profile-photo">
+                            <img src="{% static 'app/imgs/profile-10.jpg' %}" alt="">
+                        </div>
+                        <img src="{% static 'app/imgs/story-3.jpg '%}" alt="">
+                       </div>
+                        <p class="name">Ronaldo Patel</p>
+                    </div>
+                    <div class="story">
+                       <div>
+                        <div class="profile-photo">
+                            <img src="{% static 'app/imgs/profile-12.jpg' %}" alt="">
+                        </div>
+                        <img src="{% static 'app/imgs/story-4.jpg '%}" alt="">
+                       </div>
+                        <p class="name">Yoyo Baba</p>
+                    </div>
+                    <div class="story">
+                        <div>
+                            <div class="profile-photo">
+                                <img src="{% static 'app/imgs/profile-11.jpg' %}" alt="">
+                            </div>
+                            <img src="{% static 'app/imgs/story-5.jpg '%}" alt="">
+                        </div>
+                        <p class="name">Tina white</p>
+                    </div>
+                </div> -->
+                <div class="middle">
+                    <div class="stories">
+                        <!-- Your existing stories code -->
+                    </div>
+
+                    <div class="create-post">
+
+                        <!-- <p class="small-p">What's on your mind, {{ user.username }}?</p> -->
+
+
+                        <a href="{% url 'create_post' %}" class="btn btn-primary">Create Post</a>
+                        <a href="{% url 'all_posts' %}" class="view_all_posts">
+                            <span><i class='bx bx-gallery'></i></span>
+                            <h3>View All Posts</h3>
+                        </a>
+                        <!-- <a href="{% url 'friends_list' %}" class="btn btn-primary">View Friends</a> -->
+                    </div>
+
+
+                </div>
+
+                <div class="feeds">
+                    {% if posts %}
+                        {% for post in posts %}
+                        <div class="feed" id="post-{{ post.id }}">
+                            <div class="head">
+                                <div class="user">
+                                    <div class="profile-photo">
+                                        <a href="{% url 'profile' %}">
+                                            {% if post.user.profile.profile_pic %}
+                                            <img src="{{ post.user.profile.profile_pic.url }}" alt="Profile Picture"
+                                                class="profile-photo">
+                                            {% else %}
+                                            <div class="profile-placeholder">No Profile Picture</div>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <h3>{{ post.user.username }}</h3>
+                                        <small>{{ post.created_at|date:"M d, Y h:i A" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <!-- Post content: Image, Video or YouTube Video -->
+                            <div class="content photo" data-post-id="{{ post.id }}">
+                                {% if post.youtube_video_id %}
+                                <!-- Embed YouTube video -->
+                                <iframe width="560" height="315"
+                                    src="https://www.youtube.com/embed/{{ post.youtube_video_id }}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                                </iframe>
+                                {% elif post.video %}
+                                <!-- Local video -->
+                                <div class="video-container">
+                                    <video id="post-video-{{ post.id }}" >
+                                        <source src="{{ post.video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                  <!-- Mute/Unmute Button -->
+<button class="mute-btn" id="mute-btn-{{ post.id }}" onclick="toggleMute('{{ post.id }}')">
+    <i class="bx bxs-volume-mute" id="mute-icon-{{ post.id }}"></i> <!-- Default icon is muted -->
+</button>
+
+                                </div>
+                                {% elif post.image %}
+                                <!-- Local image -->
+                                <img src="{{ post.image.url }}" alt="Post Image">
+                                {% endif %}
+                            </div>
+                
+                            <!-- Post caption -->
+                            <div class="caption">
+                                <p><b>{{ post.user.username }}</b> {{ post.caption }}</p>
+                            </div>
+                
+                            <!-- Like, View, Share, and Comment Sections -->
+                            <div class="like-section">
+                                <i class="bx bxs-heart like-icon {% if post.is_liked %}liked{% else %}unliked{% endif %}"
+                                    data-post-id="{{ post.id }}"></i>
+                                <span id="like-count-{{ post.id }}">{{ post.like_set.count }} Likes</span>
+                
+                                <span id="view-count-{{ post.id }}">{{ post.views }} Views</span>
+                            </div>
+                
+                            <!-- Share Section -->
+                            <div class="share-section">
+                                <button class="share-btn" onclick="toggleShareDiv('{{ post.id }}')">Share</button>
+                                <div class="share-div" id="share-div-{{ post.id }}" style="display: none;">
+                                    <h4>Select a Friend to Share</h4>
+                                    <ul class="friends-list">
+                                        {% for friend in request.user.profile.friends.all %}
+                                        <li>
+                                            <form method="POST" action="{% url 'share_post' post.id %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="friend_id" value="{{ friend.id }}">
+                                                <button type="submit" class="friend-btn">
+                                                    <img src="{{ friend.profile_pic.url }}" alt="Profile Picture"
+                                                        class="friend-profile-photo">
+                                                    {{ friend.user.username }}
+                                                </button>
+                                            </form>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <button class="close-share-btn" onclick="toggleShareDiv('{{ post.id }}')">Cancel</button>
+                                </div>
+                            </div>
+                
+                            <!-- Post comments section -->
+                            <div class="comments">
+                                <h4>Comments ({{ post.comment_set.count }})</h4>
+                                <button class="toggle-comments-btn" data-post-id="{{ post.id }}"
+                                    onclick="toggleComments(this)">
+                                    Show Comments
+                                </button>
+                
+                                <div class="comment-list" id="comments-{{ post.id }}" style="display: none;">
+                                    {% for comment in post.comment_set.all %}
+                                    <div class="comment">
+                                        <p style="display: flex;">
+                                            <a href="{% url 'profile' %}">
+                                                {% if comment.user.profile.profile_pic %}
+                                                <img src="{{ comment.user.profile.profile_pic.url }}" alt="Profile Picture"
+                                                    class="profile-photo">
+                                                {% else %}
+                                                <div class="profile-placeholder">No Profile Picture</div>
+                                                {% endif %}
+                                            </a>
+                                            <p><b>{{ comment.user.username }}:</b> <br> {{ comment.text }}</p>
+                                        </p>
+                                    </div>
+                                    {% empty %}
+                                    <p>No comments yet.</p>
+                                    {% endfor %}
+                                </div>
+                
+                                <!-- Comment Input -->
+                                <form method="POST" action="{% url 'add_comment' post.id %}" class="comment-form"
+                                    data-post-id="{{ post.id }}">
+                                    {% csrf_token %}
+                                    <input type="text" name="text" placeholder="Add a comment..." required
+                                        class="inputtext">
+                                    <button type="submit"><i class='bx bxs-send'></i></button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <p>No posts available.</p>
+                    {% endif %}
+                </div>
+                
+                <script>
+                    // JavaScript to toggle mute and unmute
+                    function toggleMute(postId) {
+                        var video = document.getElementById('post-video-' + postId);
+                        var muteIcon = document.getElementById('mute-icon-' + postId);
+                
+                        // Toggle mute state
+                        if (video.muted) {
+                            video.muted = false;
+                            muteIcon.classList.remove('bxs-volume-mute');
+                            muteIcon.classList.add('bxs-volume-full');
+                        } else {
+                            video.muted = true;
+                            muteIcon.classList.remove('bxs-volume-full');
+                            muteIcon.classList.add('bxs-volume-mute');
+                        }
+                    }
+                
+                    // Ensure that the mute button shows the correct icon based on the initial video mute state
+                    document.addEventListener("DOMContentLoaded", function() {
+                        // Loop through all posts and check if video is muted
+                        document.querySelectorAll('.feed').forEach(function(feed) {
+                            var postId = feed.getAttribute('data-post-id');
+                            var video = document.getElementById('post-video-' + postId);
+                            var muteIcon = document.getElementById('mute-icon-' + postId);
+                
+                            if (video && video.muted) {
+                                muteIcon.classList.remove('bxs-volume-full');
+                                muteIcon.classList.add('bxs-volume-mute');
+                            } else {
+                                muteIcon.classList.remove('bxs-volume-mute');
+                                muteIcon.classList.add('bxs-volume-full');
+                            }
+                        });
+                    });
+                </script>
+                
+                
+                
+
+
+
+
+
+
+
+
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    document.querySelectorAll('.like-icon').forEach(icon => {
+                        const postId = icon.dataset.postId;
+
+                        // Check initial liked state on page load
+                        const isLiked = icon.classList.contains('liked');
+
+                        icon.addEventListener('click', () => {
+                            toggleLike(postId, icon, csrfToken);
+                        });
+                    });
+                });
+
+                // Function to toggle like status
+                function toggleLike(postId, icon, csrfToken) {
+                    const isLiked = icon.classList.contains('liked');
+                    const url = `/like/${postId}/`;
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                        },
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.liked) {
+                                icon.classList.add('liked');
+                                icon.classList.remove('unliked');
+                            } else {
+                                icon.classList.remove('liked');
+                                icon.classList.add('unliked');
+                            }
+
+                            // Update like count
+                            const likeCountElement = document.getElementById(`like-count-${postId}`);
+                            likeCountElement.innerText = `${data.likes_count} Likes`;
+                        })
+                        .catch(error => {
+                            console.error('Error toggling like:', error);
+                        });
+                }
+                function toggleShareDiv(postId) {
+                    const shareDiv = document.getElementById(`share-div-${postId}`);
+                    if (shareDiv.style.display === "none" || shareDiv.style.display === "") {
+                        shareDiv.style.display = "block";
+                    } else {
+                        shareDiv.style.display = "none";
+                    }
+                }
+
+
+
+            </script>
+            <!-- right -->
+            <div class="right">
+                <div class="messages">
+                    <div class="heading">
+                        <h4>Messages</h4>
+                        <span><i class='bx bx-edit'></i></span>
+                    </div>
+
+                    <div class="search-bar">
+                        <i class='bx bx-search'></i>
+                        <input type="search" placeholder="Search Messages" id="message-search">
+                    </div>
+
+                    <div class="category">
+                        <h6 class="active">Primary</h6>
+                        <h6>General</h6>
+                        <h6 class="message-requests">Requests(7)</h6>
+                    </div>
+
+                    {% for message in messages %}
+                    <div class="message">
+                        <div class="profile-photo">
+                            <!-- Sender's profile picture -->
+                            {% if message.sender.profile_picture %}
+                            <img src="{{ message.sender.profile_picture.url }}" alt="Profile Picture">
+                            {% else %}
+                            <span><i class='bx bxs-message-square-dots'></i></span>
+                            {% endif %}
+                        </div>
+                        <div class="message-body">
+                            <h5>{{ message.sender.user.username }}</h5>
+                            <p class="text-muted">{{ message.content|truncatechars:30 }}</p>
+
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No messages yet.</p>
+                    {% endfor %}
+                </div>
+
+
+                <div class="friend-requests">
+                    <h4>Requests</h4>
+
+
+                    {% if friend_requests.exists %}
+                    <div class="friend-requests">
+                        {% for request in friend_requests %}
+                        <div class="request">
+                            <div class="info">
+                                <div class="profile-photo">
+                                    {% if request.sender.profile.profile_pic %}
+                                    <img src="{{ request.sender.profile.profile_pic.url }}"
+                                        alt="{{ request.sender.username }}">
+                                    {% else %}
+                                    <div class="profile-placeholder">No Profile Picture</div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h5>{{ request.sender.username }}</h5>
+                                    <p class="text-muted">Friend Request</p>
+                                </div>
+                            </div>
+                            <div class="action">
+                                <form method="POST" action="{% url 'accept_friend_request' request.id %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-primary" type="submit">Accept</button>
+                                </form>
+                                <form method="POST" action="{% url 'decline_friend_request' request.id %}">
+                                    {% csrf_token %}
+                                    <button class="btn " type="submit">Decline</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No friend requests at the moment.</p>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </main>
+
+    <!-- Theme Customization -->
+    <div class="customize-theme">
+        <div class="card">
+            <h2>Customize Your View</h2>
+            <p class="text-muted">Manage Your Font Size, Color And Background</p>
+
+            <div class="font-size">
+                <h4>Font Size</h4>
+                <div>
+                    <h6>Aa</h6>
+                    <div class="choose-size">
+                        <span class="font-size-1"></span>
+                        <span class="font-size-2 active"></span>
+                        <span class="font-size-3"></span>
+                        <span class="font-size-4"></span>
+                        <span class="font-size-5"></span>
+                    </div>
+                    <h3>Aa</h3>
+                </div>
+            </div>
+
+            <div class="color">
+                <h4>Color</h4>
+                <div class="choose-color">
+                    <span class="color-1 active"></span>
+                    <span class="color-2"></span>
+                    <span class="color-3"></span>
+                    <span class="color-4"></span>
+                    <span class="color-5"></span>
+                </div>
+            </div>
+
+            <div class="background">
+                <h4>Background</h4>
+                <div class="choose-bg">
+                    <div class="bg-1 active">
+                        <span></span>
+                        <h5 for="bg-1">Light</h5>
+                    </div>
+                    <div class="bg-2">
+                        <span></span>
+                        <h5>Dim</h5>
+                    </div>
+                    <div class="bg-3">
+                        <span></span>
+                        <h5 for="bg-3">Lights Outs</h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="{% static 'app/javascript/home.js' %}"></script>
+
+
+</body>
+
+</html>

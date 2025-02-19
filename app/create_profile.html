@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Profile</title>
+    <link href="{% static 'app/css/style.css' %}" rel="stylesheet">
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            
+            <h2 class="logo">Pistagram</h2>
+    
+            <div class="search-bar">
+                <form method="GET" action="{% url 'search_profiles' %}">
+                    <i class='bx bx-search'></i>
+                    <input type="search" name="query" placeholder="Search for users" required autocomplete="off">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="create">
+                {% if user.is_authenticated %}
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                        
+                    </form>
+                {% else %}
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Login</a>
+                {% endif %}
+                <div class="profile-photo">
+                    <a href="{% url 'profile' %}">
+                        {% if profile.profile_pic %}
+                        <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                    {% else %}
+                        <div class="profile-placeholder">No Profile Picture</div>
+                    {% endif %}
+                    </a>
+                    
+                </div>
+                
+                
+                
+            </div>
+        </div>
+    </nav>
+    
+    <div class="create-profile">
+        <div class="profile-container">
+            <h1 class="page-title">Create Your Profile</h1>
+            <div class="profile-details1">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+    
+                    <!-- Profile Picture Preview -->
+                    <div class="profile-info">
+                        {% if profile.profile_pic %}
+                            <img id="profile-pic" class="profile-photo" src="{{ profile.profile_pic.url }}" alt="Profile Picture">
+                        {% else %}
+                            <div class="profile-placeholder">No Profile Picture</div>
+                        {% endif %}
+                    </div>
+    
+                    <!-- File Input for Profile Picture -->
+                    <div class="file-input-container1">
+                        <div class="file-input-label-container1">
+                            <label for="id_profile_pic" class="file-input-label">Upload Profile Picture</label>
+                            <input type="file" class="file-input" id="id_profile_pic" name="profile_pic" accept="image/*" onchange="previewProfilePic(event)">
+                        </div>
+                    </div>
+    
+                    <!-- Bio Input -->
+                    <div class="bio1">
+                        <label for="id_bio" class="form-label">Your Bio:</label>
+                        <textarea class="input-text1" id="id_bio" name="bio" rows="4" placeholder="Write a short bio...">{{ form.bio.value }}</textarea>
+                    </div>
+    
+                    <!-- Submit Button -->
+                    <div class="buttons-profile">
+                        <a href="{% url 'home' %}" class="back-home-link">Home</a>
+                        <button type="submit" class="btn-primary">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    
+       
+        
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- or -->
+    <link rel="stylesheet"
+    href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    
+    <!-- <script src="{% static 'app/javascript/home.js' %}"></script> -->
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+       
+       
+
+</head>
+<body>
+    <div class="notifications-container">
+        <h2>Notifications</h2>
+        
+        {% if notifications %}
+            <div class="notification-list">
+                {% for notification in notifications %}
+                    <div class="notification-item">
+                        <!-- <div class="profile-photo">
+                            <img src="{% if notification.actor.profile.profile_pic %}{{ notification.actor.profile.profile_pic.url }}{% else %}{% static 'app/imgs/default.jpg' %}{% endif %}" alt="Profile Picture">
+                        </div> -->
+                        <div class="notification-body">
+                            <strong>{{ notification.message }}</strong><br>
+                            <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No notifications yet.</p>
+        {% endif %}
+    </div>
+  
+</body>
+</html>

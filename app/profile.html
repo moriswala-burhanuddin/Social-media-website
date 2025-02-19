@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.user.username }}'s Profile</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- or -->
+    <link rel="stylesheet"
+    href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    
+    <!-- <script src="{% static 'app/javascript/home.js' %}"></script> -->
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+       
+       
+
+</head>
+<body>
+
+    
+    <nav>
+        <div class="container">
+            <div class="sidebar-toggle">
+                <a aria-label="Toggle Sidebar">
+                    <i class='bx bx-menu'></i>
+                </a>
+
+            </div> <br>
+            <h2 class="logo">Pistagram</h2>
+    
+            <div class="search-bar">
+                <form method="GET" action="{% url 'search_profiles' %}">
+                    <i class='bx bx-search'></i>
+                    <input type="search" name="query" placeholder="Search for users" required autocomplete="off">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="create">
+                {% if user.is_authenticated %}
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                        
+                    </form>
+                {% else %}
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Login</a>
+                {% endif %}
+                <div class="profile-photo" style="border: 2px solid black;">
+                    <a href="{% url 'profile' %}">
+                        {% if profile.profile_pic %}
+                        <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                    {% else %}
+                        <div class="profile-placeholder">No Profile Picture</div>
+                    {% endif %}
+                    </a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+    </nav>
+    <div class="left">
+        <!-- ********************************* -->
+        <!-- sidebar for small screen-->
+        <div class="sidebar">
+            <div class="search-bar-small">
+                <form method="GET" action="{% url 'search_profiles' %}">
+                    <i class='bx bx-search'></i>
+                    <input type="search" name="query" placeholder="Search for users" required
+                        autocomplete="off">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <a href="{% url 'home' %}" class="menu-item active">
+                <span><i class='bx bx-home'></i></span>
+                <h3>Home</h3>
+            </a>
+            <a href="{% url 'all_posts' %}" class="menu-item">
+                <span><i class='bx bx-file-blank'></i></span>
+                <h3>Explore</h3>
+            </a>
+
+            <a href="{% url 'messages' %}" class="menu-item" id="messages-notifications">
+                <span>
+                    <i class='bx bx-comment-dots'>
+
+                    </i>
+                </span>
+                <h3>Messages</h3>
+            </a>
+            <a href="#" class="menu-item ">
+                <span><i class='bx bx-bookmark'></i>
+
+                </span>
+                <h3>Bookmarks</h3>
+            </a>
+            <a href="#" class="menu-item ">
+                <span><i class='bx bx-coin-stack'></i>
+
+                </span>
+                <h3>Analytics</h3>
+            </a>
+            <!-- <a href="#" class="menu-item" id="theme2">
+                <span><i class='bx bx-check-circle'></i>
+
+                </span>
+                <h3>Theme</h3>
+            </a> -->
+            <a href="{% url 'settings' %}" class="menu-item">
+                <span><i class='bx bxs-cog'></i></span>
+                <h3>Settings</h3>
+            </a>
+
+
+        </div>
+        <!-- End of the sidebar -->
+        <label for="create-post" class="btn btn-primary">Create Post</label>
+
+    </div>
+
+    
+   <div class="profile-container">
+
+    <div class="profile-details1">
+        <div class="profile-info">
+            {% if profile.profile_pic %}
+                <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+            {% else %}
+                <div class="profile-placeholder">No Profile Picture</div>
+            {% endif %}
+            <h2>{{ profile.user.username }}</h2>
+        
+        </div>
+        
+       
+      
+   
+      
+        <!-- Buttons Section -->
+        <div class="buttons-profile">
+            <a href="{% url 'home' %}" class="update-button">Home</a>
+            <a href="{% url 'create_post' %}" class="update-button">Create Post</a>
+           
+            <a href="{% url 'create_profile' %}" class="update-button">Update Profile</a>
+            <a href="#" class="menu-item-2 button-theme" id="theme">
+                <span><i class='bx bx-check-circle'></i></span>
+                <h3>Theme</h3>
+            </a>
+            
+        </div>
+    </div>
+      <hr>
+      <div class="interest">
+        <p class="bio">{{ profile.bio }}
+        </p>
+      </div>
+      <h3>Your Posts</h3>
+  
+      <div class="container-middle">
+        <div class="middle">
+            <div class="feeds">
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="feed">
+                            <!-- Post Header -->
+                            <div class="head">
+                                <div class="user">
+                                    <div class="profile-photo">
+                                        <a href="{% url 'profile' %}">
+                                            {% if post.user.profile.profile_pic %}
+                                                <img src="{{ post.user.profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                                            {% else %}
+                                                <div class="profile-placeholder">No Profile Picture</div>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <h3>{{ post.user.username }}</h3>
+                                        <small>{{ post.created_at|date:"M d, Y h:i A" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Post content: Image or Video -->
+                            <div class="content">
+                                {% if post.video %}
+                                    <div class="photo">
+                                        <video muted>
+                                            <source src="{{ post.video.url }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                {% elif post.image %}
+                                    <div class="photo">
+                                        <img src="{{ post.image.url }}" alt="Post Image">
+                                    </div>
+                                {% endif %}
+                            </div>
+    
+                            <!-- Post caption -->
+                            <div class="caption">
+                                <p><b>{{ post.user.username }}</b> {{ post.caption }}</p>
+                            </div>
+    
+                            <!-- Like button and like count -->
+                            <div class="like-section">
+                                <i class="bx bxs-heart like-icon {% if request.user in post.like_set.all %}liked{% else %}unliked{% endif %}" data-post-id="{{ post.id }}"></i>
+                                <span id="like-count-{{ post.id }}">{{ post.like_set.count }} Likes</span>
+                            </div>
+    
+                            <!-- Post comments section -->
+                            <div class="comments">
+                                <h4>Comments ({{ post.comment_set.count }})</h4>
+                                <div class="comment-toggle">
+                                    <button class="toggle-comments-btn" data-post-id="{{ post.id }}" onclick="toggleComments(this)">
+                                        Show Comments
+                                    </button>
+                                </div>
+                                <div class="comment-list" id="comments-{{ post.id }}" style="display: none;">
+                                    {% for comment in post.comment_set.all %}
+                                        <div class="comment">
+                                            <p style="display: flex;">
+                                                <a href="{% url 'profile' %}">
+                                                    {% if comment.user.profile.profile_pic %}
+                                                        <img src="{{ comment.user.profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                                                    {% else %}
+                                                        <div class="profile-placeholder">No Profile Picture</div>
+                                                    {% endif %}
+                                                </a>
+                                                <p><b>{{ comment.user.username }}:</b> <br> {{ comment.text }}</p>
+                                            </p>
+                                        </div>
+                                    {% empty %}
+                                        <p>No comments yet.</p>
+                                    {% endfor %}
+                                </div>
+    
+                                <!-- Comment Input -->
+                                <form method="POST" action="{% url 'add_comment' post.id %}" class="comment-form" data-post-id="{{ post.id }}">
+                                    {% csrf_token %}
+                                    <input type="text" name="text" placeholder="Add a comment..." required class="inputtext">
+                                    <button type="submit"><i class='bx bxs-send'></i></button>
+                                </form>
+                            </div>
+    
+                            <!-- View Post Button -->
+                            <a href="{% url 'post_detail' post.id %}" class="view-post-btn">View Post</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No posts available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+ <!-- Theme Customization -->
+ <div class="customize-theme">
+    <div class="card">
+        <h2>Customize Your View</h2>
+        <p class="text-muted">Manage Your Font Size, Color And Background</p>
+
+        <div class="font-size">
+            <h4>Font Size</h4>
+            <div>
+                <h6>Aa</h6>
+                <div class="choose-size">
+                    <span class="font-size-1"></span>
+                    <span class="font-size-2 active"></span>
+                    <span class="font-size-3"></span>
+                    <span class="font-size-4"></span>
+                    <span class="font-size-5"></span>
+                </div>
+                <h3>Aa</h3>
+            </div>
+        </div>
+
+        <div class="color">
+            <h4>Color</h4>
+            <div class="choose-color">
+                <span class="color-1 active"></span>
+                <span class="color-2"></span>
+                <span class="color-3"></span>
+                <span class="color-4"></span>
+                <span class="color-5"></span>
+            </div>
+        </div>
+
+        <div class="background">
+            <h4>Background</h4>
+            <div class="choose-bg">
+                <div class="bg-1 active">
+                    <span></span>
+                    <h5 for="bg-1">Light</h5>
+                </div>
+                <div class="bg-2">
+                    <span></span>
+                    <h5>Dim</h5>
+                </div>
+                <div class="bg-3">
+                    <span></span>
+                    <h5 for="bg-3">Lights Outs</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

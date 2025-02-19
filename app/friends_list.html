@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Friend</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <!-- Boxicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <script src="{% static 'app/javascript/home.js' %}"></script>
+</head>
+<body>
+    <div class="">
+        <h1>Your Friends</h1>
+    
+        {% if friends %}
+            <ul class="">
+                {% for friend in friends %}
+                    <li class="">
+                        <div class="">
+                            <h3>{{ friend.user.username }}</h3>
+                            {% if friend.profile.profile_pic %}
+                                <img src="{{ friend.profile.profile_pic.url }}" alt="{{ friend.user.username }}" class="profile-photo">
+                            {% else %}
+                                <div class="profile-placeholder">No Profile Picture</div>
+                            {% endif %}
+                        </div>
+    
+                        <!-- Remove Friend Button -->
+                        <form method="POST" action="{% url 'remove_friend' friend.id %}" class="remove-friend-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Remove Friend</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no friends yet.</p>
+        {% endif %}
+    </div>
+    
+
+</body>
+</html>

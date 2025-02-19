@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'app/css/styleforchat.css' %}">
+  
+</head>
+<body>
+    <div class="chat-container1">
+        <div class="chat-header1">
+            {{ friend.user.username }}
+        </div>
+        <div class="chat-messages1" id="chat-messages">
+            {% for message in messages %}
+                <div class="message1 {% if message.sender == request.user.profile %}sent{% else %}received{% endif %}">
+                    <p>{{ message.content }}</p>
+        
+                    <!-- Check if the message contains an image or video -->
+                    {% if message.image %}
+                        <img src="{{ message.image.url }}" alt="Image" class="media-content1">
+                    {% elif message.video %}
+                        <video class="media-content1">
+                            <source src="{{ message.video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% endif %}
+        
+                    <small>{{ message.timestamp|date:"d M Y, H:i" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" id="chat-form" class="chat-input2">
+            {% csrf_token %}
+            <textarea name="content" rows="1" placeholder="Type your message..." required class="sendmesstext"></textarea>
+            <button type="submit" class="sendmess">Send</button>
+        </form>
+    </div>
+
+  
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Posts</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+</head>
+
+<body>
+    <nav>
+        <div class="container">
+            <div class="sidebar-toggle">
+                <a aria-label="Toggle Sidebar">
+                    <i class='bx bx-menu'></i>
+                </a>
+
+            </div> <br>
+            <h2 class="logo">Pistagram</h2>
+
+            <div class="search-bar">
+                <form method="GET" action="{% url 'search_profiles' %}">
+                    <i class='bx bx-search'></i>
+                    <input type="search" name="query" placeholder="Search for users" required autocomplete="off">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <!-- <div class="buttonsp">
+                <a href="{% url 'home' %}" class="update-button">Home</a>
+            </div> -->
+            <div class="create">
+                {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Logout</button>
+                </form>
+                {% else %}
+                <a href="{% url 'signup' %}" class="btn btn-primary">Login</a>
+                {% endif %}
+                <div class="profile-photo" style="border: 2px solid black;">
+                    <a href="{% url 'profile' %}">
+                        {% if profile.profile_pic %}
+                        <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                        {% else %}
+                        <div class="profile-placeholder">No Profile Picture</div>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="left">
+        <!-- ********************************* -->
+        <!-- sidebar for small screen-->
+        <div class="sidebar">
+            <div class="search-bar-small">
+                <form method="GET" action="{% url 'search_profiles' %}">
+                    <i class='bx bx-search'></i>
+                    <input type="search" name="query" placeholder="Search for users" required
+                        autocomplete="off">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <a href="{% url 'home' %}" class="menu-item active">
+                <span><i class='bx bx-home'></i></span>
+                <h3>Home</h3>
+            </a>
+            <a href="{% url 'all_posts' %}" class="menu-item">
+                <span><i class='bx bx-file-blank'></i></span>
+                <h3>Explore</h3>
+            </a>
+
+            <a href="{% url 'messages' %}" class="menu-item" id="messages-notifications">
+                <span>
+                    <i class='bx bx-comment-dots'>
+
+                    </i>
+                </span>
+                <h3>Messages</h3>
+            </a>
+            <a href="#" class="menu-item ">
+                <span><i class='bx bx-bookmark'></i>
+
+                </span>
+                <h3>Bookmarks</h3>
+            </a>
+            <a href="#" class="menu-item ">
+                <span><i class='bx bx-coin-stack'></i>
+
+                </span>
+                <h3>Analytics</h3>
+            </a>
+            <!-- <a href="#" class="menu-item" id="theme2">
+                <span><i class='bx bx-check-circle'></i>
+
+                </span>
+                <h3>Theme</h3>
+            </a> -->
+            <a href="{% url 'settings' %}" class="menu-item">
+                <span><i class='bx bxs-cog'></i></span>
+                <h3>Settings</h3>
+            </a>
+
+
+        </div>
+        <!-- End of the sidebar -->
+       
+
+    </div>
+    <main class="main-content">
+        <div class="content-container">
+            <div class="gallery-container">
+                <div class="gallery-grid">
+                    {% if posts %}
+                        {% for post in posts %}
+                            <a href="{% url 'post_detail' post.id %}" class="gallery-item"
+                                data-size="{% if forloop.counter|divisibleby:6 %}large{% elif forloop.counter|divisibleby:3 %}wide{% else %}regular{% endif %}">
+                                <div class="gallery-image-container">
+                                    {% if post.youtube_video_id %}
+                                        <!-- Embed YouTube video without controls and autoplay -->
+                                        <iframe width="100%" height="auto" 
+                                            src="https://www.youtube.com/embed/{{ post.youtube_video_id }}?autoplay=1&controls=0&mute=1&modestbranding=1&rel=0" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen>
+                                        </iframe>
+                                    {% elif post.image %}
+                                        <!-- Display Image -->
+                                        <img src="{{ post.image.url }}" alt="Post Image" class="gallery-image">
+                                    {% elif post.video %}
+                                        <!-- Display Local Video -->
+                                        <video id="post-video-{{ post.id }}" src="{{ post.video.url }}" class="gallery-video" autoplay muted></video>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-posts-message">No posts available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    
+
+</body>
+
+</html>

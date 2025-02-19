@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Friend</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <!-- Boxicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <script src="{% static 'app/javascript/home.js' %}"></script>
+</head>
+
+<body>
+    <div class="user-list">
+        <h4>All Users</h4>
+        {% for user in users %}
+        <div class="user">
+            <div class="user-info">
+                <h5>{{ user.username }}</h5>
+                <p>{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+            <div class="action">
+                {% if user != request.user %}
+                <form method="POST" action="{% url 'send_friend_request' user.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Send Friend Request</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,670 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    {% load static %}
+    {% load custom_filters %}
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pistagram</title>
+        <head>
+            <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+            <!-- or -->
+            <link rel="stylesheet"
+            href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+        </head>
+
+        <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+        <!-- Boxicon -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    </head>
+    <body>
+        <nav>
+            <div class="container">
+                <div class="sidebar-toggle">
+                    <a aria-label="Toggle Sidebar">
+                        <i class='bx bx-menu'></i>
+                    </a>
+    
+                </div> <br>
+                <h2 class="logo">Pistagram</h2>
+        
+                <div class="search-bar">
+                    <form method="GET" action="{% url 'search_profiles' %}">
+                        <i class='bx bx-search'></i>
+                        <input type="search" name="query" placeholder="Search for users" required autocomplete="off">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="create">
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Logout</button>
+                            
+                        </form>
+                    {% else %}
+                        <a href="{% url 'signup' %}" class="btn btn-primary">Login</a>
+                    {% endif %}
+                    <div class="profile-photo" style="border: 2px solid black;">
+                        <a href="{% url 'profile' %}">
+                            {% if profile.profile_pic %}
+                            <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                        {% else %}
+                            <div class="profile-placeholder">No Profile Picture</div>
+                        {% endif %}
+                        </a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </nav>
+
+        <div class="left">
+            <!-- ********************************* -->
+            <!-- sidebar for small screen-->
+            <div class="sidebar">
+                <div class="search-bar-small">
+                    <form method="GET" action="{% url 'search_profiles' %}">
+                        <i class='bx bx-search'></i>
+                        <input type="search" name="query" placeholder="Search for users" required
+                            autocomplete="off">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <a href="{% url 'home' %}" class="menu-item active">
+                    <span><i class='bx bx-home'></i></span>
+                    <h3>Home</h3>
+                </a>
+                <a href="{% url 'all_posts' %}" class="menu-item">
+                    <span><i class='bx bx-file-blank'></i></span>
+                    <h3>Explore</h3>
+                </a>
+    
+                <a href="{% url 'messages' %}" class="menu-item" id="messages-notifications">
+                    <span>
+                        <i class='bx bx-comment-dots'>
+    
+                        </i>
+                    </span>
+                    <h3>Messages</h3>
+                </a>
+                <a href="#" class="menu-item ">
+                    <span><i class='bx bx-bookmark'></i>
+    
+                    </span>
+                    <h3>Bookmarks</h3>
+                </a>
+                <a href="#" class="menu-item ">
+                    <span><i class='bx bx-coin-stack'></i>
+    
+                    </span>
+                    <h3>Analytics</h3>
+                </a>
+                <!-- <a href="#" class="menu-item" id="theme2">
+                    <span><i class='bx bx-check-circle'></i>
+    
+                    </span>
+                    <h3>Theme</h3>
+                </a> -->
+                <a href="{% url 'settings' %}" class="menu-item">
+                    <span><i class='bx bxs-cog'></i></span>
+                    <h3>Settings</h3>
+                </a>
+    
+    
+            </div>
+            <!-- End of the sidebar -->
+            <label for="create-post" class="btn btn-primary">Create Post</label>
+
+        </div>
+
+        <main>
+            <div class="container1">
+                <div class="middle1">
+                    <!-- Main Post -->
+                    <div class="feeds  main-post">
+                        <div class="feed">
+                            <div class="head">
+                                <div class="user">
+                                    <div class="profile-photo">
+                                        <a href="{% url 'profile' %}">
+                                            {% if post.user.profile.profile_pic %}
+                                                <img src="{{ post.user.profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                                            {% else %}
+                                                <div class="profile-placeholder">No Profile Picture</div>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <h3>{{ post.user.username }}</h3>
+                                        <small>{{ post.created_at|date:"M d, Y h:i A" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- Post content -->
+                            <div class="content ">
+                                {% if post.video %}
+                                    <div class="photo">
+                                        <video id="post-video-{{ post.id }}" unmuted>
+                                            <source src="{{ post.video.url }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        
+                                    </div>
+                                    <button id="mute-btn-{{ post.id }}" class="mute-btn" data-post-id="{{ post.id }}">
+                                        <i class="bx bxs-volume-mute"></i>
+                                    </button>
+                                {% elif post.image %}
+                                    <div class="photo">
+                                        <img src="{{ post.image.url }}" alt="Post Image">
+                                    </div>
+                                {% endif %}
+                            </div>
+        
+                            <!-- Post caption -->
+                            <div class="caption">
+                                <p><b>{{ post.user.username }}</b> {{ post.caption }}</p>
+                            </div>
+        
+                            <!-- Like section -->
+                            <div class="like-section">
+                                <i class="bx bxs-heart like-icon {% if request.user in post.like_set.all %}liked{% else %}unliked{% endif %}" data-post-id="{{ post.id }}"></i>
+                                <span id="like-count-{{ post.id }}">{{ post.like_set.count }} Likes</span>
+                                <span id="view-count-{{ post.id }}">{{ post.views }} Views</span>
+                            </div>
+        
+                            <!-- Comments section -->
+                            <div class="comments">
+                                <h4>Comments ({{ comments.count }})</h4>
+                                <div class="comment-list">
+                                    {% for comment in comments %}
+                                        <div class="comment">
+                                            <div style="display: flex; align-items: center;">
+                                                <a href="{% url 'profile' %}">
+                                                    {% if comment.user.profile.profile_pic %}
+                                                        <img src="{{ comment.user.profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                                                    {% else %}
+                                                        <div class="profile-placeholder">No Profile Picture</div>
+                                                    {% endif %}
+                                                </a>
+                                                <p><b>{{ comment.user.username }}:</b> {{ comment.text }}</p>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <p>No comments yet.</p>
+                                    {% endfor %}
+                                </div>
+        
+                                <!-- Add a comment -->
+                                <form method="POST" action="{% url 'add_comment' post.id %}" class="comment-form">
+                                    {% csrf_token %}
+                                    <input type="text" name="text" placeholder="Add a comment..." required class="inputtext">
+                                    <button type="submit"><i class='bx bxs-send'></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Other Posts -->
+                    <hr>
+                    <div class="feeds other-posts">
+                    
+                        {% for other_post in other_posts %}
+                            <div class="feed">
+                                <div class="head">
+                                    <div class="user">
+                                        <div class="profile-photo">
+                                            <a href="{% url 'profile' %}">
+                                                {% if other_post.user.profile.profile_pic %}
+                                                    <img src="{{ other_post.user.profile.profile_pic.url }}" alt="Profile Picture" class="profile-photo">
+                                                {% else %}
+                                                    <div class="profile-placeholder">No Profile Picture</div>
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>{{ other_post.user.username }}</h4>
+                                            <small>{{ other_post.created_at|date:"M d, Y h:i A" }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- Other Post content -->
+                                <div class="content">
+                                    {% if other_post.video %}
+                                        <div class="photo">
+                                            <video muted>
+                                                <source src="{{ other_post.video.url }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <!-- <button id="mute-btn-{{ post.id }}" class="mute-btn" data-post-id="{{ post.id }}">
+                                            <i class="bx bxs-volume-mute"></i>
+                                        </button> -->
+                                    {% elif other_post.image %}
+                                        <div class="photo">
+                                            <img src="{{ other_post.image.url }}" alt="Post Image">
+                                        </div>
+                                    {% endif %}
+                                </div>
+        
+                                <!-- Post caption -->
+                                <div class="caption">
+                                    <p><b>{{ other_post.user.username }}</b> {{ other_post.caption }}</p>
+                                </div>
+        
+                                <div class="like-section">
+                                    <i class="bx bxs-heart like-icon {% if post.is_liked %}liked{% else %}unliked{% endif %}" 
+                                       data-post-id="{{ post.id }}"></i>
+                                    <span id="like-count-{{ post.id }}">{{ post.like_set.count }} Likes</span>
+                                    <span id="view-count-{{ post.id }}">{{ post.views }} Views</span>
+                                </div>
+        
+                                <!-- Comments preview -->
+                                <div class="comments">
+                                    <h4>Comments ({{ other_post.comment_set.count }})</h4>
+                                    <div class="comment-list">
+                                        {% for comment in other_post.comment_set.all|slice:":2" %}
+                                            <div class="comment">
+                                                <p><b>{{ comment.user.username }}:</b> {{ comment.text }}</p>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+        
+                                <!-- Link to open the post -->
+                                <a href="{% url 'post_detail' other_post.id %}" class="view-post-btn">View Post</a>
+                            </div>
+                        {% empty %}
+                            <p>No other posts available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script>
+            
+            
+            document.addEventListener('DOMContentLoaded', function () {
+                    const sidebar = document.querySelector('.sidebar');
+                    const toggleButton = document.querySelector('.sidebar-toggle');
+                    const body = document.querySelector('body'); // Add this line
+            
+                    // Function to handle toggle
+                    function handleToggle() {
+                        if (window.innerWidth < 1200) {
+                            sidebar.classList.toggle('active');
+                        }
+                    }
+            
+                    // Function to close sidebar if clicked outside
+                    function handleClickOutside(event) {
+                        if (window.innerWidth < 1200) {
+                            if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+                                sidebar.classList.remove('active');
+                            }
+                        }
+                    }
+            
+                    // Initial setup
+                    if (window.innerWidth < 1200) {
+                        toggleButton.style.display = 'block'; // Ensure toggle button is visible
+                        toggleButton.addEventListener('click', handleToggle);
+                        document.addEventListener('click', handleClickOutside); // Add event listener for clicks
+                    }
+            
+                    // Handle window resize events to adjust visibility
+                    window.addEventListener('resize', function () {
+                        if (window.innerWidth < 1200) {
+                            toggleButton.style.display = 'block';
+                            document.addEventListener('click', handleClickOutside); // Ensure event listener is added on resize
+                        } else {
+                            toggleButton.style.display = 'none';
+                            sidebar.classList.remove('active'); // Hide sidebar if larger than 1200px
+                            document.removeEventListener('click', handleClickOutside); // Remove event listener if not needed
+                        }
+                    });
+                });
+                document.addEventListener('DOMContentLoaded', () => {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    document.querySelectorAll('.like-icon').forEach(icon => {
+        const postId = icon.dataset.postId;
+
+        // Check initial liked state on page load
+        const isLiked = icon.classList.contains('liked'); // initial like state
+
+        // Add event listener for clicking like/unlike
+        icon.addEventListener('click', () => {
+            toggleLike(postId, icon, csrfToken, isLiked); // Pass initial state to toggle function
+        });
+    });
+});
+
+// Function to toggle like status
+function toggleLike(postId, icon, csrfToken, isLiked) {
+    const url = `/like/${postId}/`;
+    
+    // Send the like/unlike request based on the initial state
+    const action = isLiked ? 'unlike' : 'like'; // Define action based on the current state
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',  // Make sure you're sending JSON content
+        },
+        body: JSON.stringify({ action: action }) // Send action as part of request
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.liked) {
+            icon.classList.add('liked');
+            icon.classList.remove('unliked');
+        } else {
+            icon.classList.remove('liked');
+            icon.classList.add('unliked');
+        }
+
+        // Update like count
+        const likeCountElement = document.getElementById(`like-count-${postId}`);
+        if (likeCountElement) {
+            likeCountElement.innerText = `${data.likes_count} Likes`;
+        }
+
+        // Update initial state to reflect the current like status
+        isLiked = data.liked; // Update the local state of the like button
+    })
+    .catch(error => {
+        console.error('Error toggling like:', error);
+    });
+}
+  
+                    document.querySelectorAll('.comment-form').forEach(form => {
+                            form.addEventListener('submit', function(event) {
+                                event.preventDefault();  // Prevent the default form submission
+                                const postId = this.dataset.postId;
+                                const formData = new FormData(this);
+                    
+                                fetch(`/comment/${postId}/`, {
+                                    method: 'POST',
+                                    body: formData,
+                                    headers: {
+                                        'X-CSRFToken': '{{ csrf_token }}'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Insert the new comment into the comment section
+                                    const commentSection = this.closest('.comments');
+                                    commentSection.insertAdjacentHTML('beforeend', data.comment_html);
+                                    this.reset();  // Reset the form
+                                });
+                            });
+                        });
+                    
+                    
+        document.addEventListener('DOMContentLoaded', () => {
+        // Get all video elements
+        const videos = document.querySelectorAll('video');
+
+        // Create an IntersectionObserver to track visibility of videos
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+
+                // Check if the video is in view
+                if (entry.isIntersecting) {
+                    video.play(); // Autoplay the video when it's in view
+                    video.unmuted = true; // Ensure video starts muted
+                } else {
+                    video.pause(); // Pause the video when it's out of view
+                }
+            });
+        }, {
+            threshold: 0.5 // Trigger when 50% of the video is visible
+        });
+
+        // Observe each video
+        videos.forEach(video => observer.observe(video));
+
+        // Get all mute buttons
+        const muteButtons = document.querySelectorAll('button[data-post-id]');
+
+        // Add event listeners to mute buttons
+        muteButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const postId = button.getAttribute('data-post-id');
+                toggleMute(postId);
+            });
+        });
+    });
+
+    // Toggle mute functionality
+    function toggleMute(postId) {
+        // Get the video and button elements
+        const video = document.getElementById(`post-video-${postId}`);
+        const muteButton = document.getElementById(`mute-btn-${postId}`);
+
+        // Check if the video exists
+        if (video) {
+            const icon = muteButton.querySelector('i'); // Get the icon element inside the button
+
+            // Toggle the muted property
+            if (video.muted) {
+                video.muted = false; // Unmute video
+                icon.className = 'bx bx-volume-full'; // Update icon to 'volume full'
+            } else {
+                video.muted = true; // Mute video
+                icon.className = 'bx bxs-volume-mute'; // Update icon to 'volume mute'
+            }
+        } else {
+            console.error("Video not found for post ID:", postId);
+        }
+    }
+
+                    function toggleComments(button) {
+                    const postId = button.getAttribute('data-post-id'); // Fetch post.id from the button's data attribute
+                    const commentList = document.getElementById(`comments-${postId}`);
+                    
+                    // Toggle visibility of the comments list
+                    if (commentList.style.display === "none" || commentList.style.display === "") {
+                        commentList.style.display = "block";
+                        button.textContent = "Hide Comments";
+                    } else {
+                        commentList.style.display = "none";
+                        button.textContent = "Show Comments";
+                    }
+                }
+            
+                // Apply stored theme settings when the page is loaded
+            const applyStoredTheme = () => {
+                const root = document.documentElement; // Root element to apply CSS variables
+            
+                // Apply stored font size
+                const fontSize = localStorage.getItem('font-size');
+                if (fontSize) {
+                    document.querySelector('html').style.fontSize = fontSize;
+                }
+            
+                // Apply stored primary color
+                const primaryColor = localStorage.getItem('primary-color');
+                if (primaryColor) {
+                    root.style.setProperty('--color-primary', primaryColor);
+                }
+            
+                // Apply stored background colors
+                const backgroundColors = JSON.parse(localStorage.getItem('background-colors'));
+                if (backgroundColors) {
+                    Object.keys(backgroundColors).forEach(key => {
+                        root.style.setProperty(key, backgroundColors[key]);
+                    });
+                }
+            };
+            
+            // Call the function to apply stored theme settings
+            applyStoredTheme();
+            
+            // Theme selection logic
+            document.addEventListener('DOMContentLoaded', () => {
+                const theme = document.querySelector('#theme');
+                const themeModal = document.querySelector('.customize-theme');
+                const fontSizes = document.querySelectorAll('.choose-size span'); // Font size elements
+                const colorSpans = document.querySelectorAll('.choose-color span'); // Color elements
+                const backgroundDivs = document.querySelectorAll('.choose-bg > div'); // Background elements
+                const root = document.documentElement; // Root element to apply CSS variables
+            
+                // Open theme modal function
+                const openThemeModal = () => {
+                    themeModal.style.display = 'grid';
+                };
+            
+                // Close theme modal function
+                const closeThemeModal = (e) => {
+                    if (e.target.classList.contains('customize-theme')) {
+                        themeModal.style.display = 'none';
+                    }
+                };
+            
+                // Event listeners for opening and closing the modal
+                themeModal.addEventListener('click', closeThemeModal);
+                theme.addEventListener('click', openThemeModal);
+            
+                // Handle font size change
+                const removesizeselector = () => {
+                    fontSizes.forEach(size => {
+                        size.classList.remove('active');
+                    });
+                };
+            
+                fontSizes.forEach(size => {
+                    size.addEventListener('click', () => {
+                        let fontSize;
+                        removesizeselector();
+                        size.classList.toggle('active');
+            
+                        // Set font size based on the clicked element
+                        if (size.classList.contains('font-size-1')) {
+                            fontSize = "10px";
+                            root.style.setProperty('--sticky-top-left', '5.4rem');
+                            root.style.setProperty('--sticky-top-right', '5.4rem');
+                        } else if (size.classList.contains('font-size-2')) {
+                            fontSize = "13px";
+                            root.style.setProperty('--sticky-top-left', '5.4rem');
+                            root.style.setProperty('--sticky-top-right', '-7rem');
+                        } else if (size.classList.contains('font-size-3')) {
+                            fontSize = "16px";
+                            root.style.setProperty('--sticky-top-left', '-2rem');
+                            root.style.setProperty('--sticky-top-right', '-17rem');
+                        } else if (size.classList.contains('font-size-4')) {
+                            fontSize = "19px";
+                            root.style.setProperty('--sticky-top-left', '-5rem');
+                            root.style.setProperty('--sticky-top-right', '-25rem');
+                        } else if (size.classList.contains('font-size-5')) {
+                            fontSize = "22px";
+                            root.style.setProperty('--sticky-top-left', '-10rem');
+                            root.style.setProperty('--sticky-top-right', '-33rem');
+                        }
+            
+                        // Apply font size to root HTML and store in localStorage
+                        document.querySelector('html').style.fontSize = fontSize;
+                        localStorage.setItem('font-size', fontSize);
+                    });
+                });
+            
+                // Function to remove 'active' class from all elements in a NodeList
+                function removeActiveClass(elements) {
+                    elements.forEach(element => element.classList.remove('active'));
+                }
+            
+                // Function to set the primary color and store it in localStorage
+                function setPrimaryColor(color) {
+                    root.style.setProperty('--color-primary', color);
+                    localStorage.setItem('primary-color', color);
+                }
+            
+                // Function to set background colors and store them in localStorage
+                function setBackgroundColors(colors) {
+                    Object.keys(colors).forEach(key => {
+                        root.style.setProperty(key, colors[key]);
+                    });
+                    localStorage.setItem('background-colors', JSON.stringify(colors));
+                }
+            
+                // Add click event listeners for color spans
+                colorSpans.forEach((span, index) => {
+                    span.addEventListener('click', () => {
+                        removeActiveClass(colorSpans);
+                        span.classList.add('active');
+            
+                        // Set primary color based on the clicked color span
+                        switch (index) {
+                            case 0:
+                                setPrimaryColor('hsl(252, 75%, 60%)');
+                                break;
+                            case 1:
+                                setPrimaryColor('hsl(52, 75%, 60%)');
+                                break;
+                            case 2:
+                                setPrimaryColor('hsl(352, 75%, 60%)');
+                                break;
+                            case 3:
+                                setPrimaryColor('hsl(152, 75%, 60%)');
+                                break;
+                            case 4:
+                                setPrimaryColor('hsl(202, 75%, 60%)');
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                });
+            
+                // Add click event listeners for background divs
+                backgroundDivs.forEach((div, index) => {
+                    div.addEventListener('click', () => {
+                        removeActiveClass(backgroundDivs);
+                        div.classList.add('active');
+            
+                        // Set background colors based on the clicked background div
+                        switch (index) {
+                            case 0:
+                                setBackgroundColors({
+                                    '--color-white': 'hsl(252, 30%, 100%)',
+                                    '--color-light': 'hsl(252, 30%, 95%)',
+                                    '--color-dark': 'hsl(252, 30%, 17%)',
+                                    '--color-black': 'hsl(252, 30%, 10%)'
+                                });
+                                break;
+                            case 1:
+                                setBackgroundColors({
+                                    '--color-white': 'hsl(252, 30%, 17%)',
+                                    '--color-light': 'hsl(252, 30%, 10%)',
+                                    '--color-dark': 'hsl(252, 30%, 95%)',
+                                    '--color-black': 'hsl(252, 30%, 100%)'
+                                });
+                                break;
+                            case 2:
+                                setBackgroundColors({
+                                    '--color-white': 'hsl(252, 30%, 10%)',
+                                    '--color-light': 'hsl(252, 30%, 5%)',
+                                    '--color-dark': 'hsl(252, 30%, 90%)',
+                                    '--color-black': 'hsl(252, 30%, 100%)'
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                });
+            });
+            </script>
+        
+        
+    </body>
+    </html>

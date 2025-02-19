@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <!-- Boxicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- <script src="{% static 'app/javascript/home.js' %}"></script> -->
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="form-title">Signup</h2>
+        <form method="post" enctype="multipart/form-data" class="text-p">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required autocomplete="off" >
+            <input type="email" name="email" placeholder="Email" required autocomplete="off">
+            <input type="password" name="password1" placeholder="Password" required autocomplete="off">
+            <input type="password" name="password2" placeholder="Confirm Password" required autocomplete="off">
+            <!-- Profile picture upload -->
+            <button type="submit">Create Account</button>
+        </form>
+        
+        
+        <div class="form-link">
+            Already have an account? <a href="{% url 'login' %}">Login here</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- or -->
+    <link rel="stylesheet"
+    href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    
+    <!-- <script src="{% static 'app/javascript/home.js' %}"></script> -->
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+       
+       
+
+</head>
+<body>
+    <div class="search-results-container">
+        <h1>Search Results for "{{ query }}"</h1>
+    
+        {% if profiles %}
+            <ul class="profile-list">
+                {% for profile in profiles %}
+                    <li class="profile-item">
+                        <a href="{% url 'view_profile' profile.user.id %}">
+                            {% if profile.profile_pic %}
+                                <img src="{{ profile.profile_pic.url }}" alt="{{ profile.user.username }}" class="profile-photofor-search">
+                            {% else %}
+                                <div class="profile-placeholder">No Profile Picture</div>
+                            {% endif %}
+                            <h3>{{ profile.user.username }}</h3>
+                           
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No profiles found for "{{ query }}".</p>
+        {% endif %}
+    </div>
+  
+</body>
+</html>

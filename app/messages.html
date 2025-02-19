@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Friend</title>
+    <!-- <link rel="stylesheet" href="{% static 'app/css/style.css' %}"> -->
+    <!-- Boxicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- <script src="{% static 'app/javascript/home.js' %}"></script> -->
+    <link rel="stylesheet" href="{% static 'app/css/styleforchat.css' %}">
+    <script src="{% static 'app/javascript/theme.js' %}"></script>
+</head>
+<body>
+    <div class="message-container">
+        <div class="message-header">
+            Your Friends
+        </div>
+        <ul class="friend-list">
+            {% if friends %}
+                {% for friend in friends %}
+                    <li class="friend-item">
+                        <img src="{{ friend.profile_pic.url }}" alt="{{ friend.user.username }}">
+                        <div class="friend-info">
+                            <h4>{{ friend.user.username }}</h4>
+                            <p>{{ friend.bio|truncatewords:10 }}</p>
+                        </div>
+                        <a href="{% url 'chat_detail' pk=friend.id %}" class="chat-btn">Chat</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p class="empty-message">You have no friends to chat with.</p>
+            {% endif %}
+        </ul>
+    </div>
+  
+
+</body>
+</html>

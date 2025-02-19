@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pistagram</title>
+    <link rel="stylesheet" href="{% static 'app/css/styleforhome.css' %}">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Pistagram</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#Feature">About</a></li>
+
+                    <li><a href="{% url 'login' %}" class="btn">Login</a></li>
+                    <li><a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="hero">
+            <!-- Video on the left and Text on the right -->
+            <div class="video-background">
+                <video autoplay muted loop>
+                    <source src="{% static 'app/imgs/bgvid.mp4' %}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <div class="text-right">
+                <h1>Customize Your Experience</h1>
+                <p>Choose the perfect theme that matches your style. Personalize every detail, and make it yours.</p>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
+            </div>
+        </section>
+
+        <section class="feature" id="Feature">
+            <!-- Feature Text and Description Section -->
+            <div class="feature-text">
+                <h2>Our Features</h2>
+                <p>Explore, post, and comment — Pistagram brings the social experience to life. Share your moments with
+                    the world, engage with others, and discover inspiring content every day.</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h3>Post Your Content</h3>
+                        <p>Share your images and stories with the Pistagram community. Whether it’s a photo, video, or
+                            story, make your posts stand out!</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Explore Posts</h3>
+                        <p>Browse through a diverse feed of posts from users around the world. Find new content,
+                            artists, and trends that match your style.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Engage with Comments</h3>
+                        <p>Join the conversation by commenting on posts. React, share your thoughts, and connect with
+                            others in real-time.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Us Section -->
+            <div class="about-us">
+                <h2>About Us</h2>
+                <p>Pistagram is a platform where people can share moments, explore diverse content, and connect through
+                    interactions like comments and likes. Our mission is to create a space where everyone can express
+                    themselves freely and engage with a global community.</p>
+            </div>
+        </section>
+
+        <div class="video-explore">
+            <video autoplay muted loop>
+                <source src="{% static 'app/imgs/bg3.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <section class="hero">
+            <!-- Text on the left and Video on the right -->
+            <div class="text-left">
+                <h1>Create Your Profile</h1>
+                <p>Start by creating your personalized profile. Choose the perfect look and feel, then make it truly
+                    yours.</p>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
+            </div>
+
+            <div class="video-background">
+                <video autoplay muted loop>
+                    <source src="{% static 'app/imgs/bgvid2.mp4' %}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+
+
+
+
+
+
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Logo on the left -->
+            <div class="footer-logo">
+                <h1>Pistagram</h1> <!-- Your logo/name goes here -->
+            </div>
+
+            <!-- Footer Links -->
+            <div class="footer-links">
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#"> Login</a></li>
+                    <li><a href="#">Sign Up</a></li>
+                </ul>
+            </div>
+
+            <!-- Footer Bottom Text -->
+            <div class="footer-bottom">
+                <p>&copy; 2024 All Rights Reserved</p>
+                <p>Designed by Burhanuddin Moriswala</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
